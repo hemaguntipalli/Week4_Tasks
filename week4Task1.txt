@@ -1,0 +1,85 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<iterator>
+using namespace std;
+
+struct Control
+{
+    int id;
+    string type;
+    string state;
+    
+    Control(int id,string type, string state)
+    {
+        this->id=id;
+        this->type=type;
+        this->state=state;
+    }
+};
+
+int main()
+{
+    vector<Control> vec;
+    
+    vec.push_back(Control(1,"button","visible"));
+    vec.push_back(Control(2,"button","visible"));
+    vec.push_back(Control(3,"button","disabled"));
+    vec.push_back(Control(4,"button","visible"));
+    vec.push_back(Control(5,"button","invisible"));
+    
+    vec.push_back(Control(6,"slider","disabled"));
+    vec.push_back(Control(7,"slider","visible"));
+    vec.push_back(Control(8,"slider","disabled"));
+    vec.push_back(Control(9,"slider","disabled"));
+    vec.push_back(Control(10,"slider","visible"));
+    
+    //for_each 
+    cout<<"iterating through vector using for_each: "<<endl;
+    for_each(vec.begin(),vec.end(),[](Control c)
+    {
+    cout<<c.id<<" "<<c.type<<" "<<c.state<<endl;
+    });
+   
+   //find_if 
+   cout<<"Find the first invisible control id using find_if: ";
+   auto invisibleControl= find_if(vec.begin(),vec.end(),[](Control c)
+    {
+       return c.state=="invisible";
+    }
+    );
+    cout<<invisibleControl->id<<endl;
+    
+    //count
+    vector<string> states;
+    for(auto& c: vec)
+    {
+        states.push_back(c.state);
+    }
+    cout<<"Count the number of visible controls using count: ";
+    int visibleCount=count(states.begin(),states.end(),"visible");
+    cout<<visibleCount<<endl;
+    
+   //count_if
+   
+   int disableCount=count_if(vec.begin(),vec.end(),[](Control c)
+   {
+    return c.type=="slider" && c.state=="disabled";
+   });
+  cout<<"Count sliders that are disabled using count_if: ";    
+  cout<<disableCount<<endl;
+   
+   //adjacent_find
+    auto it = adjacent_find(vec.begin(), vec.end(), [](Control a, Control b)
+    {
+        return a.state == b.state;
+    });
+    cout << "First adjacent pair with the same state: "
+             << "ID1 = " << it->id << " (" << it->state << "), "
+             << "ID2 = " << (++it)->id << " (" << it->state << ")" << endl;
+   
+   
+   
+  return 0;  
+}
